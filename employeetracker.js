@@ -7,10 +7,10 @@ var connection = mysql.createConnection({
   // Your port; if not 3306
   port: 3306,
 
-  // Your username
+  // username
   user: "root",
 
-  // Your password
+  // password
   password: "password",
   database: "employee_db"
 });
@@ -24,6 +24,7 @@ connection.connect(function(err) {
 function initialQuestions(){
     
 inquirer.prompt ([
+    // Initial questions
     {
         name: "choice",
         message:"What would you like to do?",
@@ -98,19 +99,39 @@ inquirer.prompt ([
     },
     
 ]).then(function(answers){
-    // if(answers.choice==="See all Auction Items"){
-    //     printItems();
-    // }
-  
-    // else if(answers.choice==="Post Item"){
-    //     postItem(answers.item,answers.category,answers.bid);
-    // }
+    // Functions to ask further questions
+    if(answers.add==="Employee"){
+        addEmployee();
+    }
+    else if(answers.add==="Role"){
+        addRole();
+    }
+    else if(answers.add==="Department"){
+        addDepartment();
+    }
+    else if(answers.view==="Employee"){
+        viewEmployee();
+
+    }else if(answers.view==="Role"){
+        viewRole();
+    }
+    else if(answers.view==="Deptartment"){
+        viewDepartment();
+    }
+    else if(answers.choice==="Manager"){
+        viewManager();
+    }
     else if(answers.choice==="Quit"){
         connection.end()
     }
-    // else if(answers.choice==="Bid"){
-    //    bidComparison(answers.bidChoice, answers.bidamount);
-    // }
+    // Need to add Update and Delete functions
 })
-})
-};
+}
+
+function addEmployee(){
+    connection.query('INSERT INTO auctionItems (item, category, bid)VALUES(?,?,?)',[item,category,bid],function(err,data){
+        if(err) throw err;
+        console.log(`${item} was added`);
+        initialQuestions();
+    })
+}
