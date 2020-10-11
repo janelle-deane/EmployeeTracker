@@ -129,9 +129,28 @@ inquirer.prompt ([
 }
 
 function addEmployee(){
-    connection.query('INSERT INTO auctionItems (item, category, bid)VALUES(?,?,?)',[item,category,bid],function(err,data){
+    inquirer.prompt ([
+        // Initial questions
+        {
+            name: "firstName",
+            message:"What is their first name?",
+            type: "input",
+        }, 
+        {
+            name: "lastName",
+            message:"What is their last name?",
+            type: "input",
+        }, 
+    ]).then 
+    connection.query('INSERT INTO employeeList (first_name, last_name)VALUES(?,?)',[first_name, last_name],function(err,data){
         if(err) throw err;
         console.log(`${item} was added`);
         initialQuestions();
     })
+
 }
+    
+    
+    
+    
+   
