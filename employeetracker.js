@@ -144,11 +144,10 @@ function addEmployee(){
     ]).then 
     connection.query('INSERT INTO employeeList (first_name, last_name)VALUES(?,?)',[first_name, last_name],function(err,data){
         if(err) throw err;
-        console.log(`${item} was added`);
+        console.log(`${first_name} ${last_name} was added`);
         initialQuestions();
     })
-
-}
+};
     
     
     
