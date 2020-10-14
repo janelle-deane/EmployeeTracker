@@ -119,7 +119,11 @@ function addEmployee() {
     connection.query(`SELECT * FROM roleList`, function (err, data2) {
         if (err) throw err;
         const roleList = data2.map(function (role) {
-            return role.title
+            return {
+                name: role.title, 
+                id: role.id 
+            }
+
         })
 
         inquirer.prompt([
@@ -141,21 +145,22 @@ function addEmployee() {
                 type: "input",
             },
         ])
-            .then((({ firstName, lastName, roleId }) => {
-                let [matchRole] = roleList.filter(role =>role.title === roleId);
+            .then(function(answers){
+                let matchRole = roleList.filter(role =>role.name === answers.roleId);
+               console.log(answers)
                 console.log(matchRole)
                 connection.query('INSERT INTO employeeList SET ?',
                     {
-                        first_name: firstName,
-                        last_name: lastName,
-                        role_id: matchRole.id
+                        first_name: answers.firstName,
+                        last_name: answers.lastName,
+                        role_id: matchRole[0].id
                     },
                     function (err, data) {
                         if (err) throw err;
-                        console.log(`${first_name} ${last_name} was added`);
+                        console.log(`${answers.firstName} ${answers.lastName} was added`);
                         initialQuestions();
                     })
-            }))
+            })
     })
 
 };
@@ -201,5 +206,13 @@ function addDepartment() {
 }
 
 function viewEmployee() {
+
+};
+
+function viewRole() {
+
+};
+
+function viewDepartment() {
 
 }
