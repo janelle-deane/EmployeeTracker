@@ -121,21 +121,28 @@ function addEmployee(){
        const deptList = data.map(function(dept){
         return dept.department_name
     })
-        console.table(data);
+
+    connection.query(`SELECT * FROM roleList`, function (err, data2){
+        if (err) throw err;
+        const roleList = data2.map(function(role){
+         return role.title
+     })
+        console.table(data2);
   
- 
+        
     inquirer.prompt ([
         // Initial questions
         {
             name: "deptId",
-            message:"What is the Dept?",
+            message:"What is their Dept?",
             type: "list",
             choices: [...deptList]
         }, 
         {
             name: "roleId",
-            message:"What is their last name?",
-            type: "input",
+            message:"What is their role?",
+            type: "list",
+            choices: [...roleList]
         }, 
         {
             name: "firstName",
@@ -154,6 +161,7 @@ function addEmployee(){
     //     console.log(`${first_name} ${last_name} was added`);
     //     initialQuestions();
     // }))
+})
 })
 };
 
