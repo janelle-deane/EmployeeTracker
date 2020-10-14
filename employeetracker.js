@@ -29,93 +29,80 @@ inquirer.prompt ([
         name: "choice",
         message:"What would you like to do?",
         type: "list",
-        choices: ["Add", "View", "Update", "Delete","Budget", "Quit"]
+        choices: ["Add Employee", "Add Role", "Add Department", "View Employee", "View Role", "View Department","Update", "Delete","Budget", "Quit"]
     
     }, 
-    {
-        name:'add',
-        message:"What would you like to add?",
-        type:"list",
-        choices: ["Employee", "Role", "Department"],
-        when:function(answers){
-            if(answers.choice==="Add"){
-                return true
-            } else {
-                return false
-            }
-        }
-    },
-    {
-        name:'view',
-        message:"What would you like to view by?",
-        type:"list",
-        choices: ["Employee", "Role", "Department", "Manager"],
-        when:function(answers){
-            if(answers.choice==="View"){
-                return true
-            } else {
-                return false
-            }
-        }
-    },
-    {
-        name:'update',
-        message:"What would you like to update?",
-        type:"list",
-        choices: ["Role", "Manager"],
-        when:function(answers){
-            if(answers.choice==="Update"){
-                return true
-            } else {
-                return false
-            }
-        }
-    },
-    {
-        name:'delete',
-        message:"What would you like to delete?",
-        type:"list",
-        choices: ["Employee", "Role", "Department"],
-        when:function(answers){
-            if(answers.choice==="Delete"){
-                return true
-            } else {
-                return false
-            }
-        }
-    },
-    {
-        name:'budget',
-        message:"Which department budget would you like to view?",
-        type:"list",
-        choices: ["department list TO BE ADDED"],
-        when:function(answers){
-            if(answers.choice==="Add"){
-                return true
-            } else {
-                return false
-            }
-        }
-    },
+    // {
+    //     name:'view',
+    //     message:"What would you like to view by?",
+    //     type:"list",
+    //     choices: ["Employee", "Role", "Department", "Manager"],
+    //     when:function(answers){
+    //         if(answers.choice==="View"){
+    //             return true
+    //         } else {
+    //             return false
+    //         }
+    //     }
+    // },
+    // {
+    //     name:'update',
+    //     message:"What would you like to update?",
+    //     type:"list",
+    //     choices: ["Role", "Manager"],
+    //     when:function(answers){
+    //         if(answers.choice==="Update"){
+    //             return true
+    //         } else {
+    //             return false
+    //         }
+    //     }
+    // },
+    // {
+    //     name:'delete',
+    //     message:"What would you like to delete?",
+    //     type:"list",
+    //     choices: ["Employee", "Role", "Department"],
+    //     when:function(answers){
+    //         if(answers.choice==="Delete"){
+    //             return true
+    //         } else {
+    //             return false
+    //         }
+    //     }
+    // },
+    // {
+    //     name:'budget',
+    //     message:"Which department budget would you like to view?",
+    //     type:"list",
+    //     choices: ["department list TO BE ADDED"],
+    //     when:function(answers){
+    //         if(answers.choice==="Add"){
+    //             return true
+    //         } else {
+    //             return false
+    //         }
+    //     }
+    // },
     
 ]).then(function(answers){
     // Functions to ask further questions
-    if(answers.add==="Employee"){
+    if(answers.choice==="Add Employee"){
         addEmployee();
     }
-    else if(answers.add==="Role"){
+    else if(answers.choice==="Add Role"){
         addRole();
     }
-    else if(answers.add==="Department"){
+    else if(answers.choice==="Add Department"){
         addDepartment();
     }
-    else if(answers.view==="Employee"){
+    else if(answers.choice==="Employee"){
         viewEmployee();
 
-    }else if(answers.view==="Role"){
+    }else if(answers.choice==="Role"){
         viewRole();
     }
-    else if(answers.view==="Deptartment"){
+    else if(answers.choice==="Deptartment"){
         viewDepartment();
     }
     else if(answers.choice==="Manager"){
@@ -129,8 +116,27 @@ inquirer.prompt ([
 }
 
 function addEmployee(){
+   connection.query(`SELECT * FROM departmentList`, function (err, data){
+       if (err) throw err;
+       const deptList = data.map(function(dept){
+        return dept.department_name
+    })
+        console.table(data);
+  
+ 
     inquirer.prompt ([
         // Initial questions
+        {
+            name: "deptId",
+            message:"What is the Dept?",
+            type: "list",
+            choices: [...deptList]
+        }, 
+        {
+            name: "roleId",
+            message:"What is their last name?",
+            type: "input",
+        }, 
         {
             name: "firstName",
             message:"What is their first name?",
@@ -141,14 +147,20 @@ function addEmployee(){
             message:"What is their last name?",
             type: "input",
         }, 
-    ]).then 
-    connection.query('INSERT INTO employeeList (first_name, last_name)VALUES(?,?)',[first_name, last_name],function(err,data){
-        if(err) throw err;
-        console.log(`${first_name} ${last_name} was added`);
-        initialQuestions();
-    })
+    ])
+    // .then (
+    // connection.query('INSERT INTO employeeList (first_name, last_name, role_id)VALUES(?,?, ?)',[first_name, last_name, role_id],function(err,data){
+    //     if(err) throw err;
+    //     console.log(`${first_name} ${last_name} was added`);
+    //     initialQuestions();
+    // }))
+})
 };
-    
+
+
+
+
+
     
     
     
