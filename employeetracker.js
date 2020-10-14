@@ -116,68 +116,90 @@ function initialQuestions() {
 }
 
 function addEmployee() {
-    connection.query(`SELECT * FROM departmentList`, function (err, data) {
+    connection.query(`SELECT * FROM roleList`, function (err, data2) {
         if (err) throw err;
-        const deptList = data.map(function (dept) {
-            return dept.department_name
+        const roleList = data2.map(function (role) {
+            return role.title
         })
 
-        connection.query(`SELECT * FROM roleList`, function (err, data2) {
-            if (err) throw err;
-            const roleList = data2.map(function (role) {
-                return role.title
-            })
-
-            inquirer.prompt([
-                // Initial questions
-                {
-                    name: "deptId",
-                    message: "What is their Dept?",
-                    type: "list",
-                    choices: [...deptList]
-                },
-                {
-                    name: "roleId",
-                    message: "What is their role?",
-                    type: "list",
-                    choices: [...roleList]
-                },
-                {
-                    name: "firstName",
-                    message: "What is their first name?",
-                    type: "input",
-                },
-                {
-                    name: "lastName",
-                    message: "What is their last name?",
-                    type: "input",
-                },
-            ])
-                .then((({ firstName, lastName, roleId }) => {
-                    let [matchRole] = data.filter(roleList.title === roleId);
-                    connection.query('INSERT INTO employeeList SET ?',
-                        {
-                            first_name: firstName,
-                            last_name: lastName,
-                            role_id: matchRole.id
-                        },
-
-
-                        function (err, data) {
-                            if (err) throw err;
-                            console.log(`${first_name} ${last_name} was added`);
-                            initialQuestions();
-                        })
-                }))
-        })
+        inquirer.prompt([
+            // Initial questions
+            {
+                name: "roleId",
+                message: "What is their role?",
+                type: "list",
+                choices: [...roleList]
+            },
+            {
+                name: "firstName",
+                message: "What is their first name?",
+                type: "input",
+            },
+            {
+                name: "lastName",
+                message: "What is their last name?",
+                type: "input",
+            },
+        ])
+            .then((({ firstName, lastName, roleId }) => {
+                let [matchRole] = roleList.filter(role =>role.title === roleId);
+                console.log(matchRole)
+                connection.query('INSERT INTO employeeList SET ?',
+                    {
+                        first_name: firstName,
+                        last_name: lastName,
+                        role_id: matchRole.id
+                    },
+                    function (err, data) {
+                        if (err) throw err;
+                        console.log(`${first_name} ${last_name} was added`);
+                        initialQuestions();
+                    })
+            }))
     })
+
 };
 
 
-
+// function addRole (){
 // let [matchDept]=data.filter(dept=>departmentList.department_name === deptId)
+// connection.query(`SELECT * FROM departmentList`, function (err, data) {
+//     if (err) throw err;
+//     const deptList = data.map(function (dept) {
+//         return dept.department_name
+//     })
+// })
 
+// {
+//     name: "deptId",
+//     message: "What is their Dept?",
+//     type: "list",
+//     choices: [...deptList]
+// },
 
+// }
 
+function addDepartment() {
+    inquirer.prompt([
+        // dept add questions
+        {
+            name: "deptAdd",
+            message: "What is the department you would like to add?",
+            type: "input",
+        },
+    ]).then(function (answer) {
+        connection.query("INSERT INTO departmentList SET ?", 
+        {
+            department_name : answer.deptAdd,
+        }, 
+        function (err, data) {
+            if (err) throw err;
+            console.log(`${answer.deptAdd} was added`);
+            initialQuestions();
+        })
+    })
+}
 
+function viewEmployee() {
 
+}
