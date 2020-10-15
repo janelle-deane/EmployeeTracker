@@ -120,12 +120,10 @@ function addEmployee() {
         if (err) throw err;
         const roleList = data2.map(function (role) {
             return {
-                name: role.title, 
-                id: role.id 
+                name: role.title,
+                id: role.id
             }
-
         })
-
         inquirer.prompt([
             // Initial questions
             {
@@ -144,67 +142,95 @@ function addEmployee() {
                 message: "What is their last name?",
                 type: "input",
             },
-        ])
-            .then(function(answers){
-                let matchRole = roleList.filter(role =>role.name === answers.roleId);
-               console.log(answers)
-                console.log(matchRole)
-                connection.query('INSERT INTO employeeList SET ?',
-                    {
-                        first_name: answers.firstName,
-                        last_name: answers.lastName,
-                        role_id: matchRole[0].id
-                    },
-                    function (err, data) {
-                        if (err) throw err;
-                        console.log(`${answers.firstName} ${answers.lastName} was added`);
-                        initialQuestions();
-                    })
-            })
+        ]).then(function (answers) {
+            let matchRole = roleList.filter(role => role.name === answers.roleId);
+            console.log(answers)
+            console.log(matchRole)
+            connection.query('INSERT INTO employeeList SET ?',
+                {
+                    first_name: answers.firstName,
+                    last_name: answers.lastName,
+                    role_id: matchRole[0].id
+                },
+                function (err, data) {
+                    if (err) throw err;
+                    console.log(`${answers.firstName} ${answers.lastName} was added`);
+                    initialQuestions();
+                })
+        })
     })
 
 };
 
 
-// function addRole (){
-// let [matchDept]=data.filter(dept=>departmentList.department_name === deptId)
-// connection.query(`SELECT * FROM departmentList`, function (err, data) {
-//     if (err) throw err;
-//     const deptList = data.map(function (dept) {
-//         return dept.department_name
-//     })
-// })
+function addRole() {
+    connection.query(`SELECT * FROM departmentList`, function (err, data) {
+        if (err) throw err;
+        const deptList = data.map(function (dept) {
+            return {
+                name: dept.department_name,
+                id: dept.id
+            }
+        })
 
-// {
-//     name: "deptId",
-//     message: "What is their Dept?",
-//     type: "list",
-//     choices: [...deptList]
-// },
-
-// }
+        inquirer.prompt([
+            // role add questions
+            {
+                name: "roleAdd",
+                message: "What is the role you would like to add?",
+                type: "input",
+            }, {
+                name: "salary",
+                message: "What is the salary?",
+                type: "number",
+            },
+            {
+                name: "deptId",
+                message: "What is their Dept?",
+                type: "list",
+                choices: [...deptList]
+            },
+        ]).then(function (answer) {
+            let matchDept = deptList.filter(dept => dept.name === answer.deptId)
+            console.log(deptList)
+            console.log(answer)
+            console.log(matchDept)
+            connection.query('INSERT INTO roleList SET ?',
+                {
+                    title: answer.roleAdd,
+                    salary: answer.salary,
+                    department_id: matchDept[0].id
+                },
+                function (err, data) {
+                    if (err) throw err;
+                    console.log(`${answer.roleAdd} in the ${matchDept[0].id} dept index which makes ${answer.salary} was added`);
+                    initialQuestions();
+                })
+        });
+    })
+};
 
 function addDepartment() {
-    inquirer.prompt([
-        // dept add questions
-        {
-            name: "deptAdd",
-            message: "What is the department you would like to add?",
-            type: "input",
-        },
-    ]).then(function (answer) {
-        connection.query("INSERT INTO departmentList SET ?", 
-        {
-            department_name : answer.deptAdd,
-        }, 
-        function (err, data) {
-            if (err) throw err;
-            console.log(`${answer.deptAdd} was added`);
-            initialQuestions();
+        inquirer.prompt([
+            // dept add questions
+            {
+                name: "deptAdd",
+                message: "What is the department you would like to add?",
+                type: "input",
+            },
+        ]).then(function (answer) {
+            connection.query("INSERT INTO departmentList SET ?",
+                {
+                    department_name: answer.deptAdd,
+                },
+                function (err, data) {
+                    if (err) throw err;
+                    console.log(`${answer.deptAdd} was added`);
+                    initialQuestions();
+                })
         })
-    })
-}
 
+};
 function viewEmployee() {
 
 };
