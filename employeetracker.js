@@ -232,30 +232,32 @@ function updateEmployee (){
                 choices: [...roleList]
             },
             {
-                name: "firstName",
+                name: "firstName2",
                 message: "What is their first name?",
                 type: "input",
             },
             {
-                name: "lastName",
+                name: "lastName2",
                 message: "What is their last name?",
                 type: "input",
             },
         ])
-        // .then(function (answers) {
-        //     let matchRole = roleList.filter(role => role.name === answers.roleId);
-        //     connection.query('UPDATE employeelist SET ?, ?, ? WHERE id = matchEmployee;',
-        //         {
-        //             first_name: answers.firstName,
-        //             last_name: answers.lastName,
-        //             role_id: matchRole[0].id
-        //         },
-        //         function (err, data) {
-        //             if (err) throw err;
-        //             console.log(`${answers.firstName} ${answers.lastName} was added`);
-        //             initialQuestions();
-        //         })
-        //     })
+        .then(function (answers) {
+            // let matchEmployee = employeeList.filter(employee => employee.name === answers.employee);
+            // console.log(matchEmployee)
+            let matchRole = roleList.filter(role => role.name === answers.roleId);
+            connection.query(`UPDATE employeelist SET ? WHERE last_name = "${answers.employee}";`,
+                {
+                    first_name: answers.firstName2,
+                    last_name: answers.lastName2,
+                    role_id: matchRole[0].id
+                },
+                function (err, data) {
+                    if (err) throw err;
+                    console.log(`${answers.firstName2} ${answers.lastName2} was added`);
+                    initialQuestions();
+                })
+            })
 
         })
     })
