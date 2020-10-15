@@ -29,50 +29,9 @@ function initialQuestions() {
             name: "choice",
             message: "What would you like to do?",
             type: "list",
-            choices: ["Add Employee", "Add Role", "Add Department", "View Employee", "View Roles", "View Department", "Update", "Delete", "Budget", "Quit"]
+            choices: ["Add Employee", "Add Role", "Add Department", "View Employee", "View Roles", "View Department", "Update Employee", "Quit"]
 
         },
-       
-        // {
-        //     name:'update',
-        //     message:"What would you like to update?",
-        //     type:"list",
-        //     choices: ["Role", "Manager"],
-        //     when:function(answers){
-        //         if(answers.choice==="Update"){
-        //             return true
-        //         } else {
-        //             return false
-        //         }
-        //     }
-        // },
-        // {
-        //     name:'delete',
-        //     message:"What would you like to delete?",
-        //     type:"list",
-        //     choices: ["Employee", "Role", "Department"],
-        //     when:function(answers){
-        //         if(answers.choice==="Delete"){
-        //             return true
-        //         } else {
-        //             return false
-        //         }
-        //     }
-        // },
-        // {
-        //     name:'budget',
-        //     message:"Which department budget would you like to view?",
-        //     type:"list",
-        //     choices: ["department list TO BE ADDED"],
-        //     when:function(answers){
-        //         if(answers.choice==="Add"){
-        //             return true
-        //         } else {
-        //             return false
-        //         }
-        //     }
-        // },
-
     ]).then(function (answers) {
         // Functions to ask further questions
         if (answers.choice === "Add Employee") {
@@ -93,8 +52,8 @@ function initialQuestions() {
         else if (answers.choice === "View Department") {
             viewDepartment()
         }
-        else if (answers.choice === "Manager") {
-            viewManager();
+        else if (answers.choice === "Update Employee") {
+            updateEmployee();
         }
         else if (answers.choice === "Quit") {
             connection.end()
@@ -240,6 +199,64 @@ connection.query("SELECT department_name FROM departmentList", function(err, res
 })
 };
 
-// function updateEmployee (){
-//     UPDATE employeelist SET first_name="Jerry", last_name="Homes", role_id =2 WHERE id = 4; 
-// }
+function updateEmployee (){
+    connection.query(`SELECT * FROM employeeList`, function (err, data) {
+        if (err) throw err;
+        const employeeList = data.map(function (employee) {
+            return {
+                name: employee.last_name,
+                id: employee.id
+            }
+            })
+        console.log(employeeList);    
+    connection.query(`SELECT * FROM roleList`, function (err, data2) {
+        if (err) throw err;
+        const roleList = data2.map(function (role) {
+            return {
+                name: role.title,
+                id: role.id
+            }
+            })
+        inquirer.prompt([
+            // Initial questions
+            {
+                name: "employee",
+                message: "Which Employee would you like to edit?",
+                type: "list",
+                choices: [...employeeList]
+            },
+            {
+                name: "roleId",
+                message: "What is their role?",
+                type: "list",
+                choices: [...roleList]
+            },
+            {
+                name: "firstName",
+                message: "What is their first name?",
+                type: "input",
+            },
+            {
+                name: "lastName",
+                message: "What is their last name?",
+                type: "input",
+            },
+        ])
+        // .then(function (answers) {
+        //     let matchRole = roleList.filter(role => role.name === answers.roleId);
+        //     connection.query('UPDATE employeelist SET ?, ?, ? WHERE id = matchEmployee;',
+        //         {
+        //             first_name: answers.firstName,
+        //             last_name: answers.lastName,
+        //             role_id: matchRole[0].id
+        //         },
+        //         function (err, data) {
+        //             if (err) throw err;
+        //             console.log(`${answers.firstName} ${answers.lastName} was added`);
+        //             initialQuestions();
+        //         })
+        //     })
+
+        })
+    })
+}
