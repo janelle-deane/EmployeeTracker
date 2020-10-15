@@ -32,19 +32,7 @@ function initialQuestions() {
             choices: ["Add Employee", "Add Role", "Add Department", "View Employee", "View Role", "View Department", "Update", "Delete", "Budget", "Quit"]
 
         },
-        // {
-        //     name:'view',
-        //     message:"What would you like to view by?",
-        //     type:"list",
-        //     choices: ["Employee", "Role", "Department", "Manager"],
-        //     when:function(answers){
-        //         if(answers.choice==="View"){
-        //             return true
-        //         } else {
-        //             return false
-        //         }
-        //     }
-        // },
+       
         // {
         //     name:'update',
         //     message:"What would you like to update?",
@@ -96,14 +84,14 @@ function initialQuestions() {
         else if (answers.choice === "Add Department") {
             addDepartment();
         }
-        else if (answers.choice === "Employee") {
+        else if (answers.choice === "View Employee") {
             viewEmployee();
 
-        } else if (answers.choice === "Role") {
+        } else if (answers.choice === "View Role") {
             viewRole();
         }
-        else if (answers.choice === "Deptartment") {
-            viewDepartment();
+        else if (answers.choice === "View Department") {
+            viewDepartment()
         }
         else if (answers.choice === "Manager") {
             viewManager();
@@ -240,5 +228,9 @@ function viewRole() {
 };
 
 function viewDepartment() {
-
-}
+connection.query("SELECT department_name FROM departmentList", function(err, res){
+    if (err) throw err;
+    console.table(res);
+    initialQuestions();
+})
+};
