@@ -220,7 +220,12 @@ function addDepartment() {
 
 };
 function viewEmployee() {
-
+    connection.query("SELECT first_name, last_name, title, salary, department_name FROM employeeList RIGHT JOIN roleList ON employeeList.role_id =roleList.id RIGHT JOIN departmentList ON roleList.department_id = departmentList.id", 
+    function(err, res){
+        if (err) throw err;
+        console.table(res);
+        initialQuestions();
+    })
 };
 
 function viewRole() {
