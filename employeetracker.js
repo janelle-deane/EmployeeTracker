@@ -132,8 +132,6 @@ function addEmployee() {
             },
         ]).then(function (answers) {
             let matchRole = roleList.filter(role => role.name === answers.roleId);
-            console.log(answers)
-            console.log(matchRole)
             connection.query('INSERT INTO employeeList SET ?',
                 {
                     first_name: answers.firstName,
@@ -180,9 +178,6 @@ function addRole() {
             },
         ]).then(function (answer) {
             let matchDept = deptList.filter(dept => dept.name === answer.deptId)
-            console.log(deptList)
-            console.log(answer)
-            console.log(matchDept)
             connection.query('INSERT INTO roleList SET ?',
                 {
                     title: answer.roleAdd,
@@ -244,3 +239,7 @@ connection.query("SELECT department_name FROM departmentList", function(err, res
     initialQuestions();
 })
 };
+
+// function updateEmployee (){
+//     UPDATE employeelist SET first_name="Jerry", last_name="Homes", role_id =2 WHERE id = 4; 
+// }
