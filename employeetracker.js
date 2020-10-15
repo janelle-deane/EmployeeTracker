@@ -58,7 +58,7 @@ function initialQuestions() {
         else if (answers.choice === "Quit") {
             connection.end()
         }
-        // Need to add Update and Delete functions
+        // Future to add Update and Delete functions
     })
 }
 
@@ -243,8 +243,6 @@ function updateEmployee (){
             },
         ])
         .then(function (answers) {
-            // let matchEmployee = employeeList.filter(employee => employee.name === answers.employee);
-            // console.log(matchEmployee)
             let matchRole = roleList.filter(role => role.name === answers.roleId);
             connection.query(`UPDATE employeelist SET ? WHERE last_name = "${answers.employee}";`,
                 {
