@@ -29,7 +29,7 @@ function initialQuestions() {
             name: "choice",
             message: "What would you like to do?",
             type: "list",
-            choices: ["Add Employee", "Add Role", "Add Department", "View Employee", "View Role", "View Department", "Update", "Delete", "Budget", "Quit"]
+            choices: ["Add Employee", "Add Role", "Add Department", "View Employee", "View Roles", "View Department", "Update", "Delete", "Budget", "Quit"]
 
         },
        
@@ -87,7 +87,7 @@ function initialQuestions() {
         else if (answers.choice === "View Employee") {
             viewEmployee();
 
-        } else if (answers.choice === "View Role") {
+        } else if (answers.choice === "View Roles") {
             viewRole();
         }
         else if (answers.choice === "View Department") {
@@ -224,7 +224,12 @@ function viewEmployee() {
 };
 
 function viewRole() {
-
+    connection.query("SELECT title, salary, department_name FROM roleList JOIN departmentList ON roleList.department_id = departmentList.id", 
+    function(err, res){
+        if (err) throw err;
+        console.table(res);
+        initialQuestions();
+    })
 };
 
 function viewDepartment() {
